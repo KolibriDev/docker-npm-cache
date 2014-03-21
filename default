@@ -1,0 +1,37 @@
+#user nginx;
+worker_processes  4;
+daemon off;
+
+error_log  /logs/error.log;
+pid        /var/run/nginx.pid;
+
+events {
+  worker_connections  1024;
+}
+
+http {
+
+  include       /etc/nginx/mime.types;
+  default_type  application/octet-stream;
+
+  access_log	/logs/access.log;
+
+  # this is the npm zone, things stay active for 3 days
+  proxy_cache_path /var/cache/npm/data levels=1:2 keys_zone=npm:20m max_size=1000m inactive=3d;
+  proxy_temp_path /var/cache/npm/tmp;
+
+  server {
+    listen 80 default_server;
+    server_name  _;
+
+    location / {
+      proxy_pass https://registry.npmjs.org/;
+      proxy_cache npm;
+      proxy_cache_valid 200 302 3d;
+      proxy_cache_valid 204 404 1m;
+      sub_filter 'registry.npmjs.org' $hostname;
+      sub_filter_once off;
+      sub_filter_types application/json;
+    }
+  }
+}
