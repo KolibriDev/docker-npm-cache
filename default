@@ -28,7 +28,8 @@ http {
       proxy_pass https://registry.npmjs.org/;
       proxy_cache npm;
       proxy_cache_valid 200 302 3d;
-      proxy_cache_valid 404 1m;
+      proxy_cache_valid any 1m;
+      proxy_cache_use_stale   error timeout invalid_header updating;
       sub_filter 'registry.npmjs.org' $hostname;
       sub_filter_once off;
       sub_filter_types application/json;
