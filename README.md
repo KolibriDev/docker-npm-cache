@@ -8,10 +8,9 @@ Building
 Usage
 =====
 
-The container needs to be aware of its own hostname in order to properly rewrite
-child requests
+The container just needs to expose a port.  That's it!
 ```bash
-> docker run --rm -h localhost:7001 -p 7001:80 npm-registry
+> docker run -d -P npm-registry
 ```
 
 Acknowledgements
