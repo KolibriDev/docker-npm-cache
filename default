@@ -43,6 +43,7 @@ http {
     listen 80 default_server;
     server_name _;
 
+    proxy_cache_bypass $http_secret_header;
     proxy_cache npm;
     proxy_cache_key $uri;
     proxy_cache_lock on;
@@ -52,7 +53,8 @@ http {
     proxy_set_header Host registry.npmjs.org;
 
     location / {
-      proxy_cache_valid 200 302 3d;
+      add_header X-Cache-Status $upstream_cache_status;
+      proxy_cache_valid 200 302 5m;
       proxy_cache_valid any 1m;
       proxy_cache_use_stale error timeout invalid_header updating;
 
