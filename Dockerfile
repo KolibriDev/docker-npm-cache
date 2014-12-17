@@ -1,7 +1,8 @@
-FROM ubuntu:13.04
+FROM ubuntu:14.04
 MAINTAINER devops@relateiq.com
 
 # Install Nginx.
+RUN apt-get update
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository -y ppa:nginx/stable && apt-get update && \
   apt-get install -y nginx
